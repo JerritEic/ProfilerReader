@@ -46,6 +46,7 @@ namespace UTJ.ProfilerReader
             bool exitFlag = true;
             bool logFlag = false;
             bool isLegacyOutputDirPath = false;
+            bool customOnly = false;
 
             for (int i = 0; i < args.Length; ++i)
             {
@@ -81,8 +82,13 @@ namespace UTJ.ProfilerReader
                 {
                     isLegacyOutputDirPath = true;
                 }
+                
+                if (args[i] == "-PH.customOnly") ;
+                {
+                    customOnly = true;
+                }
             }
-            int code = ProfilerToCsv(inputFile, outputDir, logFlag, isLegacyOutputDirPath);
+            int code = ProfilerToCsv(inputFile, outputDir, logFlag, isLegacyOutputDirPath, customOnly);
             if(timeouted)
             {
                 code = TimeoutCode;
@@ -93,7 +99,7 @@ namespace UTJ.ProfilerReader
             }
         }
 
-        public static int ProfilerToCsv(string inputFile,string outputDir,bool logFlag,bool isLegacyOutputDirPath)
+        public static int ProfilerToCsv(string inputFile,string outputDir,bool logFlag,bool isLegacyOutputDirPath, bool customOnly)
         {
             int retCode = NormalCode;
             if ( string.IsNullOrEmpty(outputDir))
@@ -112,7 +118,7 @@ namespace UTJ.ProfilerReader
             var logReader = ProfilerLogUtil.CreateLogReader(inputFile);
             currentReader = logReader;
 
-            List<IAnalyzeFileWriter> analyzeExecutes = AnalyzerUtil.CreateAnalyzerInterfaceObjects();
+            List<IAnalyzeFileWriter> analyzeExecutes = AnalyzerUtil.CreateAnalyzerInterfaceObjects(customOnly);
 
             var frameData = logReader.ReadFrameData();
             SetAnalyzerInfo(analyzeExecutes, logReader,outputDir,inputFile);

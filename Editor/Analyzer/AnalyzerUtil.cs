@@ -6,9 +6,9 @@ namespace UTJ.ProfilerReader.Analyzer
 {
     public class AnalyzerUtil
     {
-        public static List<IAnalyzeFileWriter> CreateAnalyzerInterfaceObjects()
+        public static List<IAnalyzeFileWriter> CreateAnalyzerInterfaceObjects(bool customOnly = false)
         {
-            var types = GetInterfaceType<IAnalyzeFileWriter>();
+            List<Type> types = customOnly ? GetInterfaceType<ICustomAnalyzeFileWriter>() : GetInterfaceType<IAnalyzeFileWriter>();
             return CreateInstanciateObjects<IAnalyzeFileWriter>(types);
         }
 
